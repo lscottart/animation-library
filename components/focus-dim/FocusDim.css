@@ -1,0 +1,27 @@
+/* Focus dim: hover or keyboard-focus one direct child and its siblings step back.
+   Coming back to full waits 80ms, so crossing the gap between two items doesn't flash the whole group;
+   stepping back has no wait. */
+.focus-dim > * {
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s,
+    filter 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.08s;
+}
+/* only where hover is real: on touch screens a tap would leave the group stuck dimmed */
+@media (hover: hover) {
+  .focus-dim:has(> :hover) > :not(:hover) {
+    opacity: var(--fd-dim, 0.25);
+    filter: var(--fd-filter, grayscale(1));
+    transition-delay: 0s;
+  }
+}
+/* the keyboard gets the same focus, wherever the focus sits inside the item */
+.focus-dim:has(> * :focus-visible, > :focus-visible) > :not(:focus-within) {
+  opacity: var(--fd-dim, 0.25);
+  filter: var(--fd-filter, grayscale(1));
+  transition-delay: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-dim > * {
+    transition: none;
+  }
+}

@@ -1,0 +1,96 @@
+/* Note minimap: a vertical strip of section cards whose centre is the reading line (40% down).
+   The strip glides through the viewfinder on a soft spring. Colours come from two variables. */
+.nm {
+  --nm-ink: #17191a;
+  --nm-paper: #f2f2f2;
+  position: fixed;
+  left: 24px;
+  top: 8vh;
+  height: 64vh;
+  width: 96px;
+  overflow: hidden;
+  z-index: 3;
+  display: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
+}
+/* keep in step with SHOWN in NoteMinimap.tsx */
+@media (min-width: 900px) {
+  .nm {
+    display: block;
+  }
+}
+.nm__strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  will-change: transform;
+}
+/* each card is a full-width row you can click; the visible card sits inside it */
+.nm__hit {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: block;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  --t: 0;
+}
+.nm__card {
+  position: absolute;
+  top: 50%;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--nm-ink);
+  opacity: calc(0.5 + 0.5 * var(--t));
+}
+.nm__card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* the section's title on an ink band along the bottom (the whole card is ink when there's no thumbnail) */
+.nm__title {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 3px 5px;
+  background: var(--nm-ink);
+  color: var(--nm-paper);
+  font: 600 7.5px/1.15 system-ui, sans-serif;
+  letter-spacing: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nm__hit:hover {
+  --t: 1;
+}
+.nm__hit:focus-visible {
+  outline: 1px solid var(--nm-ink);
+  outline-offset: -1px;
+}
+/* the viewfinder: four corner marks that lock onto the card you're reading */
+.nm__finder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  --arm: 7px;
+}
+.nm__finder i {
+  position: absolute;
+  width: var(--arm);
+  height: var(--arm);
+  border: 0 solid var(--nm-ink);
+}
+.nm__finder i:nth-child(1) { left: 0; top: 0; border-left-width: 1px; border-top-width: 1px; }
+.nm__finder i:nth-child(2) { right: 0; top: 0; border-right-width: 1px; border-top-width: 1px; }
+.nm__finder i:nth-child(3) { left: 0; bottom: 0; border-left-width: 1px; border-bottom-width: 1px; }
+.nm__finder i:nth-child(4) { right: 0; bottom: 0; border-right-width: 1px; border-bottom-width: 1px; }

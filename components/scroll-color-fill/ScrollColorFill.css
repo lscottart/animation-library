@@ -1,0 +1,14 @@
+/* Scroll color fill: each character starts in the "from" colour and is filled to "to" as the text scrolls
+   through the reading band. GSAP drives the colours; this file sets the starting state and the fallbacks. */
+.scf__word {
+  white-space: nowrap; /* a word's letters never split across two lines */
+}
+.scf__ch {
+  color: var(--scf-from);
+}
+/* reduced motion: no fill, the text simply reads in its final colour */
+@media (prefers-reduced-motion: reduce) {
+  .scf__ch {
+    color: var(--scf-to);
+  }
+}

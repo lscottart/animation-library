@@ -1,0 +1,97 @@
+/* Colours come from two variables set on the list or any ancestor (the page, a section, a class):
+   --sfl-ink: the rules, the fill and the idle text, so the page's text colour;
+   --sfl-paper: the page's background, which is also the hovered text.
+   The component only reads them, with fallbacks, so whatever sets them wins regardless of CSS order. */
+.sfl {
+  --sfl-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--sfl-ink, #17191a);
+}
+.sfl-row {
+  position: relative;
+  isolation: isolate; /* the fill's z-index -1 stays inside the row instead of sinking behind the section's background */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 0;
+  line-height: 1;
+  color: var(--sfl-ink, #17191a);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  outline: none;
+  transition: color 500ms var(--sfl-ease), border-color 500ms var(--sfl-ease);
+}
+.sfl-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--sfl-ink, #17191a);
+  transform: scaleY(0);
+  transform-origin: 50% 100%; /* idle: collapses toward the bottom edge */
+  transition: transform 500ms var(--sfl-ease); /* transform only: the origin must switch instantly */
+  pointer-events: none;
+}
+.sfl-label,
+.sfl-icon {
+  display: block;
+  transition: transform 700ms var(--sfl-ease);
+}
+.sfl-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sfl-icon {
+  flex: none;
+}
+
+/* the active state: a real pointer's hover, or keyboard focus. Taps on a touch screen leave nothing behind. */
+@media (hover: hover) {
+  .sfl-row:hover {
+    color: var(--sfl-paper, #f2f2f2);
+  }
+  .sfl-row:hover .sfl-fill {
+    transform: scaleY(1);
+    transform-origin: 50% 0%; /* hover: grows from the top edge */
+  }
+  .sfl-row:hover .sfl-label {
+    transform: translateX(15px);
+  }
+  .sfl-row:hover .sfl-icon {
+    transform: translateX(-15px);
+  }
+}
+.sfl-row:focus-visible {
+  color: var(--sfl-paper, #f2f2f2);
+}
+.sfl-row:focus-visible .sfl-fill {
+  transform: scaleY(1);
+  transform-origin: 50% 0%;
+}
+.sfl-row:focus-visible .sfl-label {
+  transform: translateX(15px);
+}
+.sfl-row:focus-visible .sfl-icon {
+  transform: translateX(-15px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sfl-row,
+  .sfl-fill,
+  .sfl-label,
+  .sfl-icon {
+    transition-duration: 0.01ms;
+  }
+}
+/* high-contrast modes override backgrounds, so the fill can't carry focus there */
+@media (forced-colors: active) {
+  .sfl-row:focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
+}

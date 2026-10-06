@@ -1,0 +1,101 @@
+/* Travelling indicator. Colours come from two variables; set them on .tn / .tt or :root. */
+.tn,
+.tt {
+  --ti-ink: #17191a;
+  --ti-paper: #f2f2f2;
+}
+.tn {
+  position: relative;
+  display: inline-block;
+}
+.tn__row {
+  display: flex;
+}
+.tn__item {
+  display: block;
+  padding: 0.45em 0.85em;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.tn__item:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: -3px;
+}
+/* block: a second copy of the row, paper on ink, clipped to the highlight. JS moves the clip. */
+.tn__block {
+  position: absolute;
+  inset: 0;
+  background: var(--ti-ink);
+  color: var(--ti-paper);
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+/* before JavaScript has placed the highlight, the current page is marked with plain CSS, so the first paint is right */
+.tn--block:not([data-ready]) .tn__row > [aria-current="page"] {
+  background: var(--ti-ink);
+  color: var(--ti-paper);
+}
+/* underline: a hairline under the item; JS sets its x and width */
+.tn--underline .tn__item {
+  padding-bottom: 0.6em;
+}
+.tn__line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--ti-ink);
+  opacity: 0;
+  pointer-events: none;
+}
+.tn--underline:not([data-ready]) .tn__row > [aria-current="page"] {
+  box-shadow: inset 0 -1px 0 var(--ti-ink);
+}
+
+/* tooltip toolbar */
+.tt {
+  position: relative;
+  display: inline-flex;
+  gap: 4px;
+  padding-top: 46px;
+}
+.tt__btn {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--ti-ink) 16%, transparent);
+  background: transparent;
+  color: var(--ti-ink);
+  cursor: pointer;
+}
+.tt__btn:focus-visible {
+  outline: 1px solid var(--ti-ink);
+  outline-offset: 2px;
+}
+.tt__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 13px;
+  background: var(--ti-ink);
+  color: var(--ti-paper);
+  pointer-events: none;
+  opacity: 0;
+}
+/* an invisible twin the component measures labels with */
+.tt__measure {
+  visibility: hidden;
+  width: auto;
+  padding: 0;
+}

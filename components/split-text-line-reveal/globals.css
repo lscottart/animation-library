@@ -1,0 +1,4 @@
+/* SplitReveal: hidden until split, so the unsplit text never flashes */
+[data-split-reveal] {
+  visibility: hidden;
+}
