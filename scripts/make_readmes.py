@@ -179,6 +179,7 @@ skills/        the twelve Claude Code skills (copy these into your commands fold
 components/    each animation's source, with a note on where it goes
 tests/         the suites, their fixture pages and the runner
 media/         the previews
+scripts/       rebuilds the previews and these READMEs
 ```
 
 ## License
